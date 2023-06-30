@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <main className={styles.main}>
+    <main>
       <h1>hi</h1>
       <Link href="/about">about</Link>
 
