@@ -1,14 +1,16 @@
 import getUser from "@/lib/getUser"
 import getUserPosts from "@/lib/getUserPosts"
+import getAllUsers from '@/lib/getAllUsers'
 import UserPosts from "./components/UserPosts";
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { notFound } from 'next/navigation'
+
 type Params = {
     params: {
         userId: string
     }
 }
-
 
 // 다이나믹 메타데이터 만드는 법
 
@@ -16,6 +18,12 @@ export async function generateMetadata({ params: { userId } }: Params): Promise<
     const userData: Promise<User> = getUser(userId);
 
     const user: User = await userData;
+
+    if (!user) {
+        return {
+            title: "User Not Found"
+        }
+    }
 
     return {
         title: `${user.name}`,
@@ -30,6 +38,8 @@ export default async function UserPage({ params: { userId } }: Params) {
 
     const user = await userData;
 
+
+    if (!user) return notFound();
 
     //한번에 데이터를 받아올 때 all사용 
     // const [user, userPosts] = await Promise.all([userData, userPostsData])
@@ -48,3 +58,14 @@ export default async function UserPage({ params: { userId } }: Params) {
         </>
     )
 }
+
+//
+export async function generateStaticParams() {
+    const usersData: Promise<User[]> = getAllUsers()
+    const users = await usersData
+
+    return users.map(user => ({
+        userId: user.id.toString()
+    }))
+}
+
