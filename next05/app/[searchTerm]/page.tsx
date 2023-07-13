@@ -1,7 +1,7 @@
 import React from "react";
 import getWikiRes from "@/lib/getWikiRes";
 
-import Item from "./componets/Item";
+import Item from "./components/Item";
 
 type Props = {
   params: {
